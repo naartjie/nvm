@@ -196,7 +196,7 @@ nvm_ls() {
       PATTERN="$PATTERN."
     fi
     VERSIONS=`find "$NVM_DIR/" -maxdepth 1 -type d -name "$PATTERN*" -exec basename '{}' ';' \
-      | sort -t. -u -k 1.2,1n -k 2,2n -k 3,3n | \grep -v '^ *\.'`
+      | sort -t. -u -k 1.2,1n -k 2,2n -k 3,3n | \grep -v '^ *\.' | \grep -e '^v'`
   fi
   if [ -z "$VERSIONS" ]; then
     echo "N/A"
@@ -639,6 +639,29 @@ nvm() {
       echo "Running node $VERSION"
       NODE_PATH=$RUN_NODE_PATH $NVM_DIR/$VERSION/bin/node "$@"
     ;;
+    "exec" )
+      shift
+
+      local provided_version
+      provided_version=$1
+      if [ -n "$provided_version" ]; then
+        VERSION=`nvm_version $provided_version`
+        if [ $VERSION = "N/A" ]; then
+          provided_version=''
+          nvm_rc_version
+          VERSION=`nvm_version $NVM_RC_VERSION`
+        else
+          shift
+        fi
+      fi
+
+      if [ ! -d "$NVM_DIR/$VERSION" ]; then
+        echo "$VERSION version is not installed yet" >&2
+        return 1
+      fi
+      echo "Running node $VERSION"
+      NODE_VERSION=$VERSION $NVM_DIR/nvm-exec "$@"
+    ;;
     "ls" | "list" )
       local NVM_LS_OUTPUT
       local NVM_LS_EXIT_CODE
@@ -723,7 +746,7 @@ nvm() {
       nvm_version $2
     ;;
     "--version" )
-      echo "0.12.2"
+      echo "0.13.0"
     ;;
     "unload" )
       unset -f nvm nvm_print_versions nvm_checksum nvm_ls_remote nvm_ls nvm_remote_version nvm_version nvm_rc_version > /dev/null 2>&1

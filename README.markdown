@@ -8,11 +8,11 @@ First you'll need to make sure your system has a c++ compiler.  For OSX, XCode w
 
 To install you could use the [install script][2] using cURL:
 
-    curl https://raw.githubusercontent.com/creationix/nvm/v0.12.2/install.sh | bash
+    curl https://raw.githubusercontent.com/creationix/nvm/v0.13.0/install.sh | bash
 
 or Wget:
 
-    wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.12.2/install.sh | bash
+    wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.13.0/install.sh | bash
 
 <sub>The script clones the nvm repository to `~/.nvm` and adds the source line to your profile (`~/.bash_profile`, `~/.zshrc` or `~/.profile`).</sub>
 
@@ -38,7 +38,7 @@ Often I also put in a line to use a specific version of node.
 ## Usage
 
 You can create an `.nvmrc` file containing version number in the project root directory (or any parent directory).
-`nvm use`, `nvm install`, and `nvm run` will all respect an `.nvmrc` file.
+`nvm use`, `nvm install`, `nvm exec`, and `nvm run` will all respect an `.nvmrc` file.
 
 To download, compile, and install the latest v0.10.x release of node, do this:
 
@@ -51,6 +51,10 @@ And then in any new shell just use the installed version:
 Or you can just run it:
 
     nvm run 0.10 --version
+
+Or, you can run any arbitrary command in a subshell with the desired version of node:
+
+    nvm exec 0.10 node --version
 
 If you want to see what versions are installed:
 
@@ -163,7 +167,7 @@ After the v0.8.6 release of node, nvm tries to install from binary packages. But
     nvm install -s 0.8.6
 
 [1]: https://github.com/creationix/nvm.git
-[2]: https://github.com/creationix/nvm/blob/v0.12.2/install.sh
+[2]: https://github.com/creationix/nvm/blob/v0.13.0/install.sh
 [3]: https://travis-ci.org/creationix/nvm
 [Urchin]: https://github.com/scraperwiki/urchin
 
