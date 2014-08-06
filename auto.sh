@@ -9,7 +9,7 @@ function nvm_auto() {
       if [[ "$version" == "$NVM_AUTO_VERSION" ]]; then return
       else
         NVM_AUTO_VERSION="$version"
-        nvm use "$version"
+        nvm use "$version" > /dev/null
         return $?
       fi
     fi
