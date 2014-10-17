@@ -18,7 +18,7 @@ nvm_download() {
     # Emulate curl with wget
     ARGS=$(echo "$*" | sed -e 's/--progress-bar /--progress=bar /' \
                            -e 's/-L //' \
-                           -e 's/-I //' \
+                           -e 's/-I /--server-response /' \
                            -e 's/-s /-q /' \
                            -e 's/-o /-O /' \
                            -e 's/-C - /-c /')
@@ -44,12 +44,13 @@ install_nvm_from_git() {
     mkdir -p "$NVM_DIR"
     git clone "$NVM_SOURCE" "$NVM_DIR"
   fi
-  cd $NVM_DIR && git checkout v0.13.0 && git branch -D master || true
+  cd "$NVM_DIR" && git checkout v0.17.2 && git branch -D master >/dev/null 2>&1
+  return
 }
 
 install_nvm_as_script() {
   if [ -z "$NVM_SOURCE" ]; then
-    NVM_SOURCE="https://raw.githubusercontent.com/creationix/nvm/v0.13.0/nvm.sh"
+    NVM_SOURCE="https://raw.githubusercontent.com/creationix/nvm/v0.17.2/nvm.sh"
   fi
 
   # Downloading to $NVM_DIR
@@ -75,28 +76,27 @@ if [ -z "$METHOD" ]; then
     echo >&2 "You need git, curl, or wget to install nvm"
     exit 1
   fi
-else
-  if [ "$METHOD" = "git" ]; then
-    if ! nvm_has "git"; then
-      echo >&2 "You need git to install nvm"
-      exit 1
-    fi
-    install_nvm_from_git
+elif [ "~$METHOD" = "~git" ]; then
+  if ! nvm_has "git"; then
+    echo >&2 "You need git to install nvm"
+    exit 1
   fi
-  if [ "$METHOD" = "script" ]; then
-    if ! nvm_has "nvm_download"; then
-      echo >&2 "You need curl or wget to install nvm"
-      exit 1
-    fi
-    install_nvm_as_script
+  install_nvm_from_git
+elif [ "~$METHOD" = "~script" ]; then
+  if ! nvm_has "nvm_download"; then
+    echo >&2 "You need curl or wget to install nvm"
+    exit 1
   fi
+  install_nvm_as_script
 fi
 
 echo
 
 # Detect profile file if not specified as environment variable (eg: PROFILE=~/.myprofile).
 if [ -z "$PROFILE" ]; then
-  if [ -f "$HOME/.bash_profile" ]; then
+  if [ -f "$HOME/.bashrc" ]; then
+    PROFILE="$HOME/.bashrc"
+  elif [ -f "$HOME/.bash_profile" ]; then
     PROFILE="$HOME/.bash_profile"
   elif [ -f "$HOME/.zshrc" ]; then
     PROFILE="$HOME/.zshrc"
@@ -109,7 +109,7 @@ SOURCE_STR="\nexport NVM_DIR=\"$NVM_DIR\"\n[ -s \"\$NVM_DIR/nvm.sh\" ] && . \"\$
 
 if [ -z "$PROFILE" ] || [ ! -f "$PROFILE" ] ; then
   if [ -z "$PROFILE" ]; then
-    echo "=> Profile not found. Tried ~/.bash_profile, ~/.zshrc, and ~/.profile."
+    echo "=> Profile not found. Tried ~/.bashrc, ~/.bash_profile, ~/.zshrc, and ~/.profile."
     echo "=> Create one of them and run this script again"
   else
     echo "=> Profile $PROFILE not found"

@@ -2,17 +2,21 @@
 
 ## Installation
 
-First you'll need to make sure your system has a c++ compiler.  For OSX, XCode will work, for Ubuntu, the build-essential and libssl-dev packages work.
+First you'll need to make sure your system has a c++ compiler. For OSX, XCode will work, for Ubuntu, the build-essential and libssl-dev packages work.
+
+Note: `nvm` does not support Windows (see [#284](https://github.com/creationix/nvm/issues/284)). Two alternatives exist, which are not supported nor developed by us:
+ - [nvmw](http://github.com/hakobera/nvmw)
+ - [nvm-windows](http://github.com/coreybutler/nvm-windows)
 
 ### Install script
 
 To install you could use the [install script][2] using cURL:
 
-    curl https://raw.githubusercontent.com/creationix/nvm/v0.13.0/install.sh | bash
+    curl https://raw.githubusercontent.com/creationix/nvm/v0.17.2/install.sh | bash
 
 or Wget:
 
-    wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.13.0/install.sh | bash
+    wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.17.2/install.sh | bash
 
 <sub>The script clones the nvm repository to `~/.nvm` and adds the source line to your profile (`~/.bash_profile`, `~/.zshrc` or `~/.profile`).</sub>
 
@@ -22,11 +26,11 @@ You can customize the install source, directory and profile using the `NVM_SOURC
 
 ### Manual install
 
-For manual install create a folder somewhere in your filesystem with the `nvm.sh` file inside it.  I put mine in a folder called `nvm`.
+For manual install create a folder somewhere in your filesystem with the `nvm.sh` file inside it. I put mine in a folder called `nvm`.
 
-Or if you have `git` installed, then just clone it:
+Or if you have `git` installed, then just clone it, and check out the latest version:
 
-    git clone https://github.com/creationix/nvm.git ~/.nvm
+    git clone https://github.com/creationix/nvm.git ~/.nvm && cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`
 
 To activate nvm, you need to source it from your shell:
 
@@ -56,6 +60,18 @@ Or, you can run any arbitrary command in a subshell with the desired version of 
 
     nvm exec 0.10 node --version
 
+In place of a version pointer like "0.10", you can use the special default aliases "stable" and "unstable":
+
+    nvm install stable
+    nvm install unstable
+    nvm use stable
+    nvm run unstable --version
+
+If you want to use the system-installed version of node, you can use the special default alias "system":
+
+    nvm use system
+    nvm run system --version
+
 If you want to see what versions are installed:
 
     nvm ls
@@ -70,7 +86,7 @@ To restore your PATH, you can deactivate it.
 
 To set a default Node version to be used in any new shell, use the alias 'default':
 
-    nvm alias default 0.10
+    nvm alias default stable
 
 To use a mirror of the node binaries, set `$NVM_NODEJS_ORG_MIRROR`:
 
@@ -78,6 +94,8 @@ To use a mirror of the node binaries, set `$NVM_NODEJS_ORG_MIRROR`:
     nvm install 0.10
 
     NVM_NODEJS_ORG_MIRROR=http://nodejs.org/dist nvm install 0.10
+
+`nvm use` will not, by default, create a "current" symlink. Set `$NVM_SYMLINK_CURRENT` to "true" to enable this behavior, which is sometimes useful for IDEs.
 
 ## License
 
@@ -167,7 +185,7 @@ After the v0.8.6 release of node, nvm tries to install from binary packages. But
     nvm install -s 0.8.6
 
 [1]: https://github.com/creationix/nvm.git
-[2]: https://github.com/creationix/nvm/blob/v0.13.0/install.sh
+[2]: https://github.com/creationix/nvm/blob/v0.17.2/install.sh
 [3]: https://travis-ci.org/creationix/nvm
 [Urchin]: https://github.com/scraperwiki/urchin
 

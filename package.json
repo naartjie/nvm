@@ -1,6 +1,6 @@
 {
   "name": "nvm",
-  "version": "0.13.0",
+  "version": "0.17.2",
   "description": "Node Version Manager - Simple bash script to manage multiple active node.js versions",
   "directories": {
     "test": "test"
@@ -8,7 +8,8 @@
   "scripts": {
     "test": "urchin test",
     "test/fast": "urchin -f test/fast",
-    "test/slow": "urchin -f test/slow"
+    "test/slow": "urchin -f test/slow",
+    "test/installation": "urchin -f test/installation"
   },
   "repository": {
     "type": "git",
